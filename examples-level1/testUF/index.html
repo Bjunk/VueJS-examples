@@ -1,0 +1,59 @@
+<html>
+<head>
+<title>Valor UF</title>
+<link rel="dns-prefetch" href="//mindicador.cl">
+<link rel="dns-prefetch" href="//cdn.jsdelivr.net">
+</head>
+<body>
+<div id="app">
+  <h1>Vue.js - Examples - valor uf+dolar usando axios</h1>
+  <section v-if="errored">
+	<p>API Timeout more than 1000ms - not available</p>
+  </section>
+  <section v-else>
+    <div v-if="loading">
+	<span>Loading... </span>
+    </div>
+    <div v-else>
+      <p>Valor Propiedad: UF {{ new Intl.NumberFormat('de-DE').format(valor) }} </p>
+    	<p style="color: red"><strong>Valor UF:</strong> {{ new Intl.NumberFormat('de-DE').format(valoruf) }}</p>
+    	<p><strong>Valor $: {{ new Intl.NumberFormat('de-DE').format((valor*valoruf)) }}</strong></p>
+      <p>USD: {{ new Intl.NumberFormat('de-DE').format(dolar) }}</p>
+      <p>Propiedad en USD: {{ new Intl.NumberFormat('de-DE').format(valor*valoruf/dolar) }} </p>
+    </div>
+  </section>
+</div>
+<!-- development version, includes helpful console warnings -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+new Vue({
+  el: '#app',
+  data () {
+    return {
+      dolar: 700,
+      loading: true,
+      errored: false,
+      valoruf: 27000,
+      valor: 8900
+    }
+  },
+  mounted () {
+    axios
+      .get('https://mindicador.cl/api',{timeout: 1000})
+      .then(response => {
+        this.valoruf = response.data.uf.valor;
+        this.dolar   = response.data.dolar.valor;
+      })
+      .catch(error => {
+        console.log(error)
+        this.errored = true
+      })
+      .finally(() => this.loading = false);
+  }
+});
+
+</script>
+
+</body>
+</html>
