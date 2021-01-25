@@ -1,0 +1,121 @@
+<html>
+<head>
+</head>
+<body>
+<div id="app">
+      <div id="chart">
+        <apexchart type="heatmap" height="350" :options="chartOptions" :series="series"></apexchart>
+      </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue-apexcharts@1.6.0/dist/vue-apexcharts.min.js"></script>
+<script>
+new Vue({
+        el: '#app',
+        components: {
+          apexchart: VueApexCharts,
+        },
+	methods: {
+    generateData(count, yrange) {
+      var i = 0;
+      var series = [];
+      while (i < count) {
+        var x = (i + 1).toString();
+        var y = Math.floor(Math.random() * (yrange.max - yrange.min + 1)) + yrange.min;
+        series.push({
+          x: x,
+          y: y
+        });
+        i++;
+      }
+      return series;
+    }
+	},
+        data: function() {
+         return { 
+          series: [{
+            name: 'Metric1',
+            data: this.generateData(18, {
+              min: 0,
+              max: 90
+            })
+          },
+          {
+            name: 'Metric2',
+            data: this.generateData(18, {
+              min: 0,
+              max: 90
+            })
+          },
+          {
+            name: 'Metric3',
+            data: this.generateData(18, {
+              min: 0,
+              max: 90
+            })
+          },
+          {
+            name: 'Metric4',
+            data: this.generateData(18, {
+              min: 0,
+              max: 90
+            })
+          },
+          {
+            name: 'Metric5',
+            data: this.generateData(18, {
+              min: 0,
+              max: 90
+            })
+          },
+          {
+            name: 'Metric6',
+            data: this.generateData(18, {
+              min: 0,
+              max: 90
+            })
+          },
+          {
+            name: 'Metric7',
+            data: this.generateData(18, {
+              min: 0,
+              max: 90
+            })
+          },
+          {
+            name: 'Metric8',
+            data: this.generateData(18, {
+              min: 0,
+              max: 90
+            })
+          },
+          {
+            name: 'Metric9',
+            data: this.generateData(18, {
+              min: 0,
+              max: 90
+            })
+          }
+          ],
+          chartOptions: {
+            chart: {
+              height: 350,
+              type: 'heatmap',
+            },
+            dataLabels: {
+              enabled: false
+            },
+            colors: ["#008FFB"],
+            title: {
+              text: 'HeatMap Chart (Single color)'
+            },
+          }
+	}
+          
+          
+        }
+      });
+</script>
+</body>
+</html>
