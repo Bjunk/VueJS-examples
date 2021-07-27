@@ -1,0 +1,43 @@
+<html>
+<head>
+</head>
+<body>
+	<div id="avatar">
+		<img :src="imageurl">
+		<input type="file" @change="OnSelectedFile">
+		<button @click="OnUpload">Upload</button>
+	</div>
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+var avatar = new Vue({
+	el: '#avatar',
+	data () {
+		return {
+		selectedfile: null,
+		imageurl: null
+	}
+	},
+	methods: {
+		OnSelectedFile: function(event) {
+			console.log(event);
+			this.selectedfile = event.target.files[0];
+			const reader = new FileReader();
+			reader.readAsDataURL(this.selectedfile);
+			reader.onload = e => {
+                    		this.imageurl = e.target.result;
+                	};
+		},
+		OnUpload: function() {
+			const fd = new FormData();
+			fd.append('image', this.selectedfile, this.selectedfile.name);
+			axios.post('localhost:8000/',fd)
+			.then(res => {
+				console.log(res)
+			})
+		}
+	}
+});
+</script>
+</body>
+</html>

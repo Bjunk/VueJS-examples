@@ -1,25 +1,40 @@
 <html>
 <head>
-<title>Valor UF</title>
-<link rel="dns-prefetch" href="//mindicador.cl">
+<title>Valor Bitcoin</title>
 <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
+<style>
+
+.highlight {
+  background-color: white;
+  animation-name: test;
+  animation-duration: 1s;
+  animation-timing-function: linear;
+}
+
+@keyframes test {
+  
+      from {background-color: white;}
+      to {background-color: gold;}
+      from {background-color: gold;}
+      to {background-color: white;}
+}
+
+</style>
 </head>
 <body>
 <div id="app">
-  <h1>Vue.js - Examples - valor uf+dolar usando axios</h1>
+  <h1>Vue.js - Examples - Valor Bitcoint - Call API Refresh</h1>
   <section v-if="errored">
 	<p>API Timeout more than 1000ms - not available</p>
   </section>
   <section v-else>
     <div v-if="loading">
-	<span>Loading... </span>
+	     <span>Loading... </span>
     </div>
     <div v-else>
-      <p>Valor Propiedad: UF {{ new Intl.NumberFormat('de-DE').format(valor) }} </p>
-    	<p style="color: red"><strong>Valor UF:</strong> {{ new Intl.NumberFormat('de-DE').format(valoruf) }}</p>
-    	<p><strong>Valor $: {{ new Intl.NumberFormat('de-DE').format((valor*valoruf)) }}</strong></p>
-      <p>USD: {{ new Intl.NumberFormat('de-DE').format(dolar) }}</p>
-      <p>Propiedad en USD: {{ new Intl.NumberFormat('de-DE').format(valor*valoruf/dolar) }} </p>
+      <p>Time {{ updated_time }} </p>
+    	<p>Valor Bitcoint: <strong :class={highlight}>USD {{ usd }}</strong></p>
+      <p>Valor Bitcoint: <strong :class={highlight}>Eur {{ eur }}</strong></p>
     </div>
   </section>
 </div>
@@ -27,29 +42,50 @@
 <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
-new Vue({
+app = new Vue({
   el: '#app',
   data () {
     return {
-      dolar: 700,
+      usd: 0,
+      response: [],
       loading: true,
       errored: false,
-      valoruf: 27000,
-      valor: 8900
+      updated_time: 0,
+      highlight: false,
     }
   },
   mounted () {
-    axios
-      .get('https://mindicador.cl/api',{timeout: 1000})
-      .then(response => {
-        this.valoruf = response.data.uf.valor;
-        this.dolar   = response.data.dolar.valor;
-      })
-      .catch(error => {
-        console.log(error)
-        this.errored = true
-      })
-      .finally(() => this.loading = false);
+    this.$nextTick(function () {
+            window.setInterval(() => {
+                this.getAPI();
+            },10000);
+        })
+  },
+  methods: {
+  	getAPI: function() {
+       this.highlight = false;
+  	   axios
+        .get('https://api.coindesk.com/v1/bpi/currentprice.json',{timeout: 5000})
+        .then(response => {
+          this.usd = response.data.bpi.USD.rate_float;
+          this.eur = response.data.bpi.EUR.rate_float;
+          this.response = response.data;
+          this.updated_time = response.data.time.updated;
+        })
+        .catch(error => {
+          console.log(error)
+          this.errored = true
+        })
+        .finally(() => {this.errored = false; this.loading = false;});
+  	 }
+  },
+  watch: {
+    usd: function() {
+      this.highlight = true;
+    },
+    eur: function() {
+      this.highlight = true;
+    }
   }
 });
 
