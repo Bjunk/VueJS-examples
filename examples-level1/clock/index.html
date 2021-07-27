@@ -66,7 +66,7 @@ updateTime();
 function updateTime() {
     var cd = new Date();
 	var time = new Date();
-	clock.time = time.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+	clock.time = time.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true });
     //clock.time = zeroPadding(cd.getHours(), 2) + ':' + zeroPadding(cd.getMinutes(), 2) + ':' + zeroPadding(cd.getSeconds(), 2);
     //clock.date = zeroPadding(cd.getFullYear(), 4) + '-' + zeroPadding(cd.getMonth()+1, 2) + '-' + zeroPadding(cd.getDate(), 2) + ' ' + week[cd.getDay()];
 };
